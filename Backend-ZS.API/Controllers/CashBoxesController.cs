@@ -109,9 +109,6 @@ namespace Backend_ZS.API.Controllers
             if (cashBox.Status == CashBoxStatus.Open)
                 return Conflict("La caja ya está abierta.");
 
-            // ✅ Solo si pertenece al “día local” actual
-            if (!(cashBox.OpenedAt >= utcStart && cashBox.OpenedAt < utcEnd))
-                return Conflict("Solo se puede reabrir una caja del día actual.");
 
             cashBox.Status = CashBoxStatus.Open;
             cashBox.ClosedAt = null;

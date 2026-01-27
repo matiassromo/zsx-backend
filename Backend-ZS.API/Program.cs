@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
             "http://localhost:3000",
             "https://localhost:3000",
             // prod: tu front en Vercel/Netlify/etc (ajusta el dominio real)
-            "https://zs-frontend.vercel.app"
+            "https://zsx-frontend.onrender.com"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
