@@ -21,8 +21,7 @@ builder.Services.AddCors(options =>
         p.WithOrigins(
             "http://localhost:3000",
             "https://localhost:3000",
-            // prod: tu front en Vercel/Netlify/etc (ajusta el dominio real)
-            "https://zsx-frontend.onrender.com"
+            "https://zsx-frontend-k1wm.onrender.com"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
