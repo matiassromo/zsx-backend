@@ -57,22 +57,12 @@ namespace Backend_ZS.API.Repositories
                 // devolver usos de la vieja tarjeta (por la qty anterior)
                 if (oldCard != null) oldCard.Uses += 1;
 
-                // consumir usos de la nueva tarjeta (por la nueva qty)
-                
-
+                // consumir uso de la nueva tarjeta
                 newCard.Uses -= 1;
 
                 existing.AccessCardId = entranceAccessCard.AccessCardId;
             }
-            else
-            {
-                // misma tarjeta: ajustar solo la diferencia de qty
-                var card = await dbContext.AccessCards.FindAsync(existing.AccessCardId);
-                if (card == null) throw new InvalidOperationException("Associated AccessCard not found.");
-
-                card.Uses -= 1;
-               
-            }
+            // misma tarjeta: solo actualizar fechas/horas, sin modificar uses (ya fue consumido al crear)
 
             existing.EntranceDate = entranceAccessCard.EntranceDate;
             existing.EntranceEntryTime = entranceAccessCard.EntranceEntryTime;

@@ -155,7 +155,8 @@ app.UseSwaggerUI(c =>
 });
 
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
 
 // --- activar CORS antes de MapControllers ---
 app.UseCors(corsPolicy);
