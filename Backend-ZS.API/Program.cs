@@ -133,16 +133,21 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 var app = builder.Build();
 
 // Seed admin user password on startup (since EF HasData can't use PasswordHasher dynamically)
-using (var scope = app.Services.CreateScope())
+try
 {
+    using var scope = app.Services.CreateScope();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var adminUser = await userManager.FindByNameAsync("adminzs");
     if (adminUser != null && !await userManager.CheckPasswordAsync(adminUser, "admin123"))
     {
-        // Reset password to admin123
         var token = await userManager.GeneratePasswordResetTokenAsync(adminUser);
         await userManager.ResetPasswordAsync(adminUser, token, "admin123");
     }
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogWarning(ex, "Seeding skipped: could not connect to database on startup.");
 }
 
 
