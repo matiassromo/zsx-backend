@@ -45,6 +45,19 @@ namespace Backend_ZS.API.Controllers
             return (utcStart, utcEnd);
         }
 
+        // GET: /api/CashBoxes/{id}
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var cashBox = await dbContext.CashBoxes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (cashBox == null) return NotFound();
+
+            return Ok(mapper.Map<CashBoxDto>(cashBox));
+        }
+
         // GET: /api/CashBoxes/today?date=2026-01-11
         [HttpGet("today")]
         public async Task<IActionResult> GetToday([FromQuery] DateOnly? date = null)
