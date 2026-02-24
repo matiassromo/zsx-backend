@@ -149,6 +149,35 @@ catch (Exception ex)
     logger.LogWarning(ex, "Seeding skipped: could not connect to database on startup.");
 }
 
+// Seed demo user for portfolio visibility
+try
+{
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var demoUser = await userManager.FindByNameAsync("demo");
+    if (demoUser == null)
+    {
+        demoUser = new ApplicationUser
+        {
+            UserName = "demo",
+            Email = "demo@zs.com",
+            EmailConfirmed = true,
+        };
+        await userManager.CreateAsync(demoUser, "demo123");
+        await userManager.AddToRoleAsync(demoUser, "admin");
+    }
+    else if (!await userManager.CheckPasswordAsync(demoUser, "demo123"))
+    {
+        var token = await userManager.GeneratePasswordResetTokenAsync(demoUser);
+        await userManager.ResetPasswordAsync(demoUser, token, "demo123");
+    }
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogWarning(ex, "Demo user seeding skipped.");
+}
+
 
 // ✅ Swagger habilitado SIEMPRE (Production incluido)
 app.UseSwagger();
